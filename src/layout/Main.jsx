@@ -6,8 +6,6 @@ import Search from "../components/Search";
 import Filters from "../components/Filters";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
-console.log(API_KEY);
-
 
 class Main extends React.Component {
   constructor(props) {
@@ -34,7 +32,7 @@ class Main extends React.Component {
 
   const typeParam = type && type !== 'all' ? `&type=${type}` : '';
 
-  fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}${typeParam}`)
+  fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}${typeParam}`)
     .then((response) => response.json())
     .then((data) =>
       this.setState({
