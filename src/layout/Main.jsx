@@ -9,7 +9,7 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 function Main() {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(false); // стартуем с false
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
 
