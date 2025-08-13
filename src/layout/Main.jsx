@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ItemList from "../components/ItemList";
 import Preloader from "../components/Preloader";
 import { Typography, Box } from "@mui/material";
@@ -7,84 +7,57 @@ import Filters from "../components/Filters";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      movies: [],
-      loading: true,
-      searchQuery: '',
-      filter: 'all'
-    };
-  }
+function Main() {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false); // стартуем с false
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('all');
 
-  componentDidMount() {
-    this.fetchMovies(this.state.searchQuery);
-  }
-
-  fetchMovies = (query, type) => {
+  const fetchMovies = (query, type) => {
     if (!query.trim()) {
-      this.setState({ movies: [], loading: false });
+      setMovies([]);
+      setLoading(false);
       return;
-  }
+    }
 
-  this.setState({ loading: true });
+    setLoading(true);
 
-  const typeParam = type && type !== 'all' ? `&type=${type}` : '';
+    const typeParam = type && type !== 'all' ? `&type=${type}` : '';
 
-  fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}${typeParam}`)
-    .then((response) => response.json())
-    .then((data) =>
-      this.setState({
-        movies: data.Search || [],
-        loading: false
+    fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}${typeParam}`)
+      .then(res => res.json())
+      .then(data => {
+        setMovies(data.Search || []);
+        setLoading(false);
       })
-    )
-    .catch(() => this.setState({ loading: false }));
+      .catch(() => setLoading(false));
   };
 
-  handleSearch = (search) => {
-    this.setState({ searchQuery: search }, () => {
-      if (search.trim()) {
-        this.fetchMovies(this.state.searchQuery, this.state.filter);
-      }
-    });
+  const handleSearch = (newSearch) => {
+    setSearch(newSearch);
+    fetchMovies(newSearch, filter);
   };
 
-  handleChange = (filter) => {
-    this.setState({ filter }, () => {
-      if (this.state.searchQuery.trim()) {
-        this.fetchMovies(this.state.searchQuery, this.state.filter);
-      }
-    });
+  const handleChange = (newFilter) => {
+    setFilter(newFilter);
+    fetchMovies(search, newFilter);
   };
 
-  render() {
-    const { movies, loading, filter } = this.state;
+  if (loading) return <Preloader />;
 
-    if (loading) {
-      return <Preloader />;
-    }
-    if (!movies.length) {
-      return (
-        <Box>
-          <Search onSearch={this.handleSearch} />
-          <Filters filter={filter} onFilterChange={this.handleChange} />
-          <Typography variant="h6" align="center" sx={{ mt: 5 }}>
-            Let's search
-          </Typography>
-        </Box>
-      );
-    }
-
-    return (
-      <Box>
-        <Search onSearch={this.handleSearch} />
-        <Filters filter={this.state.filter} onFilterChange={this.handleChange} />
+  return (
+    <Box>
+      <Search onSearch={handleSearch} />
+      <Filters filter={filter} onFilterChange={handleChange} />
+      {!movies.length ? (
+        <Typography variant="h6" align="center" sx={{ mt: 5 }}>
+          Let's search
+        </Typography>
+      ) : (
         <ItemList movies={movies} />
-      </Box>
-    );
-  }
+      )}
+    </Box>
+  );
 }
 
 export default Main;
