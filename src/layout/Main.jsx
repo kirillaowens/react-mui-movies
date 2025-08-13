@@ -80,7 +80,7 @@ class Main extends React.Component {
     return (
       <Box>
         <Search onSearch={this.handleSearch} />
-      <Filters filter={this.state.filter} onFilterChange={this.handleChange} />
+        <Filters filter={this.state.filter} onFilterChange={this.handleChange} />
         <ItemList movies={movies} />
       </Box>
     );

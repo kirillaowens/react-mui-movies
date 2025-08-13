@@ -7,7 +7,7 @@ function ItemList(props) {
   return (
     <Grid container spacing={2} sx={{ flex: 1, p: 5 }}>
       {movies.map((movie) => (
-        <Grid size={{ xs: 1, sm: 2, md: 3 }} key={movie.imdbID}>
+        <Grid size={{ xs: 7, sm: 5, md: 3 }} key={movie.imdbID}>
           <Item 
             Title={movie.Title}
             Poster={movie.Poster}

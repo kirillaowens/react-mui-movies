@@ -1,13 +1,21 @@
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 
-function Item(props) {
-  const { Poster, Title, Year, Type } = props
-  return(
-    <Card sx={{ maxWidth: 400 }}>
+function Item({ Poster, Title, Year, Type }) {
+  const posterUrl = Poster !== "N/A" ? Poster : "/placeholder.jpg";
+
+  return (
+    <Card
+      sx={{
+        width: "100%",
+        maxWidth: 345,
+      }}
+    >
       <CardMedia
-        sx={{ height: 500 }}
-        image={Poster}
-        title={Title}
+        component="img"
+        height="100%"
+        image={posterUrl}
+        alt={Title}
+        sx={{ objectFit: "cover" }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -30,4 +38,4 @@ function Item(props) {
   )
 }
 
-export default Item
+export default Item;
